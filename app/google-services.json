@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "827649401332",
+    "firebase_url": "https://okaevent-7bd1d.firebaseio.com",
+    "project_id": "okaevent-7bd1d",
+    "storage_bucket": "okaevent-7bd1d.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:827649401332:android:e2ef52e6e9d85729",
+        "android_client_info": {
+          "package_name": "com.okamoba.okaevent_android"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "827649401332-6uo9tga7at6amb5qd2lpf8172bufdjue.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDhQ4hYFaSL3Og5qfJPhPJ3J70ZD6YhBkY"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
