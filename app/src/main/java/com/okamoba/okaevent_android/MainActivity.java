@@ -4,7 +4,13 @@ import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.PopupMenu;
 import android.util.Log;
+import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
+import android.widget.ImageButton;
+import android.widget.TextView;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -37,6 +43,7 @@ public class MainActivity extends AppCompatActivity {
                 if (user != null) {
                     // User is signed in
                     Log.e(TAG, "onAuthStateChanged:signed_in:" + user.getUid());
+                    ((TextView)findViewById(R.id.main_TX_name)).setText(user.getDisplayName());
                 } else {
                     // User is signed out
                     Log.e(TAG, "onAuthStateChanged:signed_out");
@@ -46,10 +53,37 @@ public class MainActivity extends AppCompatActivity {
         };
         // サインインできてないときは、サインインする
         if (mAuth.getCurrentUser() == null) {
-            Intent intent = new Intent(this, LoginActivity.class);
+            Intent intent = new Intent(this, SigninActivity.class);
+            // MainActivityに戻れないようにする
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             startActivity(intent);
         }
         //-------------------------------------------------------------------------------
+
+        // set button listener
+        findViewById(R.id.main_BT_setting).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // show PopupMenu
+                PopupMenu popup = new PopupMenu(MainActivity.this, findViewById(R.id.main_BT_setting));
+                popup.getMenuInflater().inflate(R.menu.edit_profile, popup.getMenu());
+                popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                    public boolean onMenuItemClick(MenuItem item) {
+                        switch (item.getItemId()) {
+                            case R.id.item_editProfile:
+                                Intent intent = new Intent(MainActivity.this, SetUserInfoActivity.class);
+                                startActivity(intent);
+                                break;
+                            case R.id.item_signOut:
+                                signOut();
+                                break;
+                        }
+                        return true;
+                    }
+                });
+                popup.show();
+            }
+        });
     }
 
     @Override
@@ -61,6 +95,18 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Override
+    protected void onResume() {
+        super.onResume();
+
+        FirebaseUser user = mAuth.getCurrentUser();
+        if (user != null && (user.getDisplayName() == null || user.getDisplayName().equals(""))) {
+            Intent intent = new Intent(this, SetUserInfoActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            startActivity(intent);
+        }
+    }
+
+    @Override
     public void onStop() {
         super.onStop();
 
@@ -68,5 +114,14 @@ public class MainActivity extends AppCompatActivity {
         if (mAuthListener != null) {
             mAuth.removeAuthStateListener(mAuthListener);
         }
+    }
+
+    private void signOut() {
+        mAuth.signOut();
+
+        Intent intent = new Intent(this, SigninActivity.class);
+        // MainActivityに戻れないようにする
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(intent);
     }
 }
