@@ -1,19 +1,20 @@
 package com.okamoba.okaevent_android;
 
 import android.content.Intent;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.support.v7.widget.PopupMenu;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
-import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+
+import java.util.Arrays;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -29,6 +30,10 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        RecyclerView recyclerView = findViewById(R.id.eventsRecyclerView);
+        EventAdapter adapter = new EventAdapter(Arrays.asList("イベント1", "イベント2", "イベント3")); // TODO:Firestore から取得する
+        recyclerView.setAdapter(adapter);
+
         //-------------------------------------------------------------------------------
         /*
         Firebase認証
@@ -43,7 +48,7 @@ public class MainActivity extends AppCompatActivity {
                 if (user != null) {
                     // User is signed in
                     Log.e(TAG, "onAuthStateChanged:signed_in:" + user.getUid());
-                    ((TextView)findViewById(R.id.main_TX_name)).setText(user.getDisplayName());
+                    ((TextView) findViewById(R.id.main_TX_name)).setText(user.getDisplayName());
                 } else {
                     // User is signed out
                     Log.e(TAG, "onAuthStateChanged:signed_out");
