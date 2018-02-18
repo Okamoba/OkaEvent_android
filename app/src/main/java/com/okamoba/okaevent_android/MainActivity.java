@@ -13,8 +13,7 @@ import android.widget.TextView;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-
-import java.util.Arrays;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -25,13 +24,15 @@ public class MainActivity extends AppCompatActivity {
     private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener mAuthListener;
 
+    private FirebaseFirestore mFireStore = FirebaseFirestore.getInstance();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
         RecyclerView recyclerView = findViewById(R.id.eventsRecyclerView);
-        EventAdapter adapter = new EventAdapter(Arrays.asList("イベント1", "イベント2", "イベント3")); // TODO:Firestore から取得する
+        EventAdapter adapter = new EventAdapter(mFireStore.collection("events"));
         recyclerView.setAdapter(adapter);
 
         //-------------------------------------------------------------------------------

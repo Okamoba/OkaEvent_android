@@ -1,8 +1,16 @@
 package com.okamoba.okaevent_android;
 
+import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.ViewGroup;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
+
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -11,10 +19,23 @@ import java.util.List;
  */
 public class EventAdapter extends RecyclerView.Adapter {
 
-    private List<String> mEvents;
+    private List<String> mEvents = new ArrayList<>();
 
-    EventAdapter(List<String> events) {
-        mEvents = events;
+    EventAdapter(CollectionReference events) {
+        events.get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            List<DocumentSnapshot> documentSnapshots = task.getResult().getDocuments();
+                            for (DocumentSnapshot documentSnapshot : documentSnapshots) {
+                                // TODO:Document から Event に変換
+                                mEvents.add(documentSnapshot.getId());
+                            }
+                            notifyDataSetChanged();
+                        }
+                    }
+                });
     }
 
     @Override
