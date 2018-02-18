@@ -2,7 +2,7 @@ apply plugin: 'com.android.application'
 
 android {
     compileSdkVersion 26
-    buildToolsVersion "26.0.0"
+    buildToolsVersion "27.0.2"
     defaultConfig {
         applicationId "com.okamoba.okaevent_android"
         minSdkVersion 15
@@ -24,12 +24,18 @@ dependencies {
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
-    compile 'com.android.support:appcompat-v7:26.+'
+    implementation "com.android.support:appcompat-v7:${supportPackageVersion}"
+    implementation "com.android.support:recyclerview-v7:${supportPackageVersion}"
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
     testCompile 'junit:junit:4.12'
 
-    compile 'com.google.firebase:firebase-auth:11.8.0'
-    compile 'com.google.firebase:firebase-firestore:11.8.0'
+    implementation "com.google.firebase:firebase-auth:${firebaseVersion}"
+    implementation "com.google.firebase:firebase-firestore:${firebaseVersion}"
+}
+
+buildscript {
+    ext.supportPackageVersion = '26.0.2'
+    ext.firebaseVersion = '11.8.0'
 }
 
 apply plugin: 'com.google.gms.google-services'
