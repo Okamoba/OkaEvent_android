@@ -18,7 +18,7 @@ import java.util.List;
  */
 public class EventAdapter extends RecyclerView.Adapter {
 
-    private List<String> mEvents = new ArrayList<>();
+    private List<EventModel> mEvents = new ArrayList<>();
 
     EventAdapter(CollectionReference events) {
         events.addSnapshotListener(new EventListener<QuerySnapshot>() {
@@ -26,8 +26,7 @@ public class EventAdapter extends RecyclerView.Adapter {
             public void onEvent(QuerySnapshot documentSnapshots, FirebaseFirestoreException e) {
                 mEvents.clear();
                 for (DocumentSnapshot documentSnapshot : documentSnapshots.getDocuments()) {
-                    // TODO:Document から Event に変換
-                    mEvents.add(documentSnapshot.getId());
+                    mEvents.add(EventModel.createFromDocumentSnapshot(documentSnapshot));
                 }
                 notifyDataSetChanged();
             }

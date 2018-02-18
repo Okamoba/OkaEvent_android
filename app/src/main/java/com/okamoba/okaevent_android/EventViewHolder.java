@@ -9,17 +9,24 @@ import android.widget.TextView;
  * Created by tatsuhama on 2018/02/18.
  * 各イベントを表示するための　ViewHolder
  */
-
 class EventViewHolder extends RecyclerView.ViewHolder {
+
+    private TextView nameText;
+    private TextView textText;
+    private TextView addressText;
 
     EventViewHolder(ViewGroup parent) {
         super(LayoutInflater.from(parent.getContext()).inflate(R.layout.item_event, parent, false));
+        nameText = itemView.findViewById(R.id.eventItemName);
+        textText = itemView.findViewById(R.id.eventItemText);
+        addressText = itemView.findViewById(R.id.eventItemAddress);
     }
 
-    void bindEvent(String event) { // TODO:イベントモデルに差し替える
+    void bindEvent(EventModel event) {
         // TODO:デザイン適用
-        TextView textView = itemView.findViewById(R.id.text);
-        textView.setText(event);
+        nameText.setText(event.getName());
+        textText.setText(event.getText());
+        addressText.setText(event.getAddress());
     }
 
 }
