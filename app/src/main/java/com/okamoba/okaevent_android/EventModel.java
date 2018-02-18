@@ -1,6 +1,7 @@
 package com.okamoba.okaevent_android;
 
-import java.time.LocalDateTime;
+import android.support.annotation.NonNull;
+
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -10,73 +11,88 @@ import java.util.Map;
  */
 
 public class EventModel {
-    private Map<String, Object> event_map = new HashMap<>();
+    @NonNull private String name = "";
+    @NonNull private String text = "";
+    @NonNull private String address = "";
+    @NonNull private Date start_datetime = new Date();
+    @NonNull private Date end_datetime = new Date();
+    @NonNull private String url = "";
+    @NonNull private String author = "";
 
-    private String name;
-    private String text;
-    private String address;
-    private LocalDateTime start_datetime;
-    private LocalDateTime end_datetime;
-    private String url;
-    private String uid;
-
+    @NonNull
     public String getName() {
-        return (String)event_map.get("name");
+        return name;
     }
 
+    public void setName(@NonNull String name) {
+        this.name = name;
+    }
+
+    @NonNull
     public String getText() {
-        return (String)event_map.get("text");
+        return text;
     }
 
+    public void setText(@NonNull String text) {
+        this.text = text;
+    }
+
+    @NonNull
     public String getAddress() {
-        return (String)event_map.get("address");
+        return address;
     }
 
+    public void setAddress(@NonNull String address) {
+        this.address = address;
+    }
+
+    @NonNull
     public Date getStart_datetime() {
-        return (Date)event_map.get("start_datetime");
+        return start_datetime;
     }
 
+    public void setStart_datetime(@NonNull Date start_datetime) {
+        this.start_datetime = start_datetime;
+    }
+
+    @NonNull
     public Date getEnd_datetime() {
-        return (Date)event_map.get("end_datetime");
+        return end_datetime;
     }
 
+    public void setEnd_datetime(@NonNull Date end_datetime) {
+        this.end_datetime = end_datetime;
+    }
+
+    @NonNull
     public String getUrl() {
-        return (String)event_map.get("url");
+        return url;
     }
 
-    public String getUid() {
-        return (String)event_map.get("url");
+    public void setUrl(@NonNull String url) {
+        this.url = url;
     }
 
-    public void setName(String name) {
-        event_map.put("name", name);
+    @NonNull
+    public String getAuthor() {
+        return author;
     }
 
-    public void setText(String text) {
-        event_map.put("text", text);
-    }
-
-    public void setAddress(String address) {
-        event_map.put("address", address);
-    }
-
-    public void setStart_datetime(Date start_datetime) {
-        event_map.put("start_datetime", start_datetime);
-    }
-
-    public void setEnd_datetime(Date end_datetime) {
-        event_map.put("end_datetime", end_datetime);
-    }
-
-    public void setUrl(String url) {
-        event_map.put("url", url);
-    }
-
-    public void setUid(String uid) {
-        event_map.put("uid", uid);
+    public void setAuthor(@NonNull String uid) {
+        this.author = uid;
     }
 
     public Map<String, Object> getEvent() {
+        Map<String, Object> event_map = new HashMap<>();
+
+        event_map.put("name", name);
+        event_map.put("text", text);
+        event_map.put("address", address);
+        event_map.put("start_datetime", start_datetime);
+        event_map.put("end_datetime", end_datetime);
+        event_map.put("url", url);
+        event_map.put("uid", author);
+
         return event_map;
     }
 }
