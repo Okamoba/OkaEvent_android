@@ -1,13 +1,12 @@
 package com.okamoba.okaevent_android;
 
-import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.ViewGroup;
 
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
+import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
@@ -22,20 +21,17 @@ public class EventAdapter extends RecyclerView.Adapter {
     private List<String> mEvents = new ArrayList<>();
 
     EventAdapter(CollectionReference events) {
-        events.get()
-                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        if (task.isSuccessful()) {
-                            List<DocumentSnapshot> documentSnapshots = task.getResult().getDocuments();
-                            for (DocumentSnapshot documentSnapshot : documentSnapshots) {
-                                // TODO:Document から Event に変換
-                                mEvents.add(documentSnapshot.getId());
-                            }
-                            notifyDataSetChanged();
-                        }
-                    }
-                });
+        events.addSnapshotListener(new EventListener<QuerySnapshot>() {
+            @Override
+            public void onEvent(QuerySnapshot documentSnapshots, FirebaseFirestoreException e) {
+                mEvents.clear();
+                for (DocumentSnapshot documentSnapshot : documentSnapshots.getDocuments()) {
+                    // TODO:Document から Event に変換
+                    mEvents.add(documentSnapshot.getId());
+                }
+                notifyDataSetChanged();
+            }
+        });
     }
 
     @Override
