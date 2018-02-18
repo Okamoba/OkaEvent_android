@@ -18,6 +18,7 @@ public class EventModel {
     @NonNull private Date end_datetime = new Date();
     @NonNull private String url = "";
     @NonNull private String author = "";
+    @NonNull private String document_id = "";
 
     @NonNull
     public String getName() {
@@ -82,6 +83,15 @@ public class EventModel {
         this.author = uid;
     }
 
+    @NonNull
+    public String getDocument_id() {
+        return document_id;
+    }
+
+    public void setDocument_id(@NonNull String document_id) {
+        this.document_id = document_id;
+    }
+
     public Map<String, Object> getEvent() {
         Map<String, Object> event_map = new HashMap<>();
 
@@ -91,7 +101,7 @@ public class EventModel {
         event_map.put("start_datetime", start_datetime);
         event_map.put("end_datetime", end_datetime);
         event_map.put("url", url);
-        event_map.put("uid", author);
+        event_map.put("author", author);
 
         return event_map;
     }
