@@ -11,14 +11,22 @@ import android.widget.TextView;
  */
 class EventViewHolder extends RecyclerView.ViewHolder {
 
+    private TextView nameText;
+    private TextView textText;
+    private TextView addressText;
+
     EventViewHolder(ViewGroup parent) {
         super(LayoutInflater.from(parent.getContext()).inflate(R.layout.item_event, parent, false));
+        nameText = itemView.findViewById(R.id.eventItemName);
+        textText = itemView.findViewById(R.id.eventItemText);
+        addressText = itemView.findViewById(R.id.eventItemAddress);
     }
 
     void bindEvent(EventModel event) {
         // TODO:デザイン適用
-        TextView textView = itemView.findViewById(R.id.text);
-        textView.setText(event.getText());
+        nameText.setText(event.getName());
+        textText.setText(event.getText());
+        addressText.setText(event.getAddress());
     }
 
 }
