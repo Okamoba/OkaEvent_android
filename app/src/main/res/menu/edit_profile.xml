@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:id="@+id/item_createEvent" android:title="Create Event"></item>
     <item android:id="@+id/item_editProfile" android:title="Edit Profile"></item>
     <item android:id="@+id/item_signOut" android:title="Sign Out"></item>
 </menu>

@@ -14,6 +14,7 @@ import android.widget.TextView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.messaging.FirebaseMessaging;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -30,6 +31,8 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        FirebaseMessaging.getInstance().subscribeToTopic("all");
 
         RecyclerView recyclerView = findViewById(R.id.eventsRecyclerView);
         EventAdapter adapter = new EventAdapter(mFireStore.collection("events"));
@@ -76,6 +79,10 @@ public class MainActivity extends AppCompatActivity {
                 popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
                     public boolean onMenuItemClick(MenuItem item) {
                         switch (item.getItemId()) {
+                            case R.id.item_createEvent:
+                                Intent event_intent = new Intent(MainActivity.this, CreateEventActivity.class);
+                                startActivity(event_intent);
+                                break;
                             case R.id.item_editProfile:
                                 Intent intent = new Intent(MainActivity.this, SetUserInfoActivity.class);
                                 startActivity(intent);
