@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:id="@+id/new_event_scroll">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="16sp"
+            android:text="エラー"
+            android:visibility="gone"
+            android:background="#f00"
+            android:textColor="#fff"
+            android:id="@+id/new_event_error"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="イベント名（必須）"
+            android:textSize="12sp"
+            android:textColor="#000"
+            android:labelFor="@+id/new_event_name"/>
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/new_event_name"
+            android:inputType="text"
+            />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="説明文"
+            android:textSize="12sp"
+            android:textColor="#000"
+            android:labelFor="@+id/new_event_text"/>
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/new_event_text"
+            android:inputType="text"
+            />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="会場"
+            android:textSize="12sp"
+            android:textColor="#000"
+            android:labelFor="@+id/new_event_address"/>
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/new_event_address"
+            android:inputType="text"
+            />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="開始日時"
+            android:textSize="12sp"
+            android:textColor="#000"
+            android:labelFor="@+id/new_event_start_datetime"/>
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/new_event_start_datetime"
+            android:inputType="datetime"
+            />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="終了日時"
+            android:textSize="12sp"
+            android:textColor="#000"
+            android:labelFor="@+id/new_event_end_datetime"/>
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/new_event_end_datetime"
+            android:inputType="datetime"
+            />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="イベントURL"
+            android:textSize="12sp"
+            android:textColor="#000"
+            android:labelFor="@+id/new_event_url"/>
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/new_event_url"
+            android:inputType="textUri"
+            />
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="作成"
+            android:textSize="12sp"
+            android:id="@+id/new_event_button"/>
+
+    </LinearLayout>
+
+</ScrollView>

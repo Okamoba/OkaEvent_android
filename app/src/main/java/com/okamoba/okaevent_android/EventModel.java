@@ -1,6 +1,7 @@
 package com.okamoba.okaevent_android;
 
 import android.support.annotation.NonNull;
+import android.util.Log;
 
 import com.google.firebase.firestore.DocumentSnapshot;
 
@@ -122,11 +123,12 @@ public class EventModel {
         model.name = map.get("name").toString();
         model.text = map.get("text").toString();
         model.address = map.get("address").toString();
-        model.start_datetime = new Date(); // TODO:パース
-        model.end_datetime = new Date();// TODO:パース
+        model.start_datetime = new Date(map.get("start_datetime").toString()); // TODO:パース
+        model.end_datetime = new Date(map.get("end_datetime").toString());// TODO:パース
         model.url = map.get("url").toString();
         model.author = map.get("author").toString();
         model.document_id = documentSnapshot.getId();
+        Log.e("EventModel", String.valueOf(model.start_datetime.getYear()));
         return model;
     }
 }

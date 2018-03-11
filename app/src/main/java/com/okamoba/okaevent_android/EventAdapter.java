@@ -25,6 +25,8 @@ public class EventAdapter extends RecyclerView.Adapter {
             @Override
             public void onEvent(QuerySnapshot documentSnapshots, FirebaseFirestoreException e) {
                 mEvents.clear();
+                if (documentSnapshots == null)
+                    return;
                 for (DocumentSnapshot documentSnapshot : documentSnapshots.getDocuments()) {
                     mEvents.add(EventModel.createFromDocumentSnapshot(documentSnapshot));
                 }

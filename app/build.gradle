@@ -31,6 +31,8 @@ dependencies {
 
     implementation "com.google.firebase:firebase-auth:${firebaseVersion}"
     implementation "com.google.firebase:firebase-firestore:${firebaseVersion}"
+    implementation "com.google.firebase:firebase-messaging:${firebaseVersion}"
+    compile 'com.firebase:firebase-jobdispatcher:0.8.5'
 }
 
 buildscript {

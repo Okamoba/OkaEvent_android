@@ -25,7 +25,7 @@ class EventViewHolder extends RecyclerView.ViewHolder {
     void bindEvent(EventModel event) {
         // TODO:デザイン適用
         nameText.setText(event.getName());
-        textText.setText(event.getText());
+        textText.setText(event.getStart_datetime().toString());
         addressText.setText(event.getAddress());
     }
 
