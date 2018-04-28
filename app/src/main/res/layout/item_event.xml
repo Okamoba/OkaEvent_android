@@ -20,30 +20,53 @@
         app:layout_constraintTop_toTopOf="parent"
         tools:text="Android勉強会" />
 
-    <TextView
-        android:id="@+id/eventItemText"
-        android:layout_width="0dp"
+    <TableLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="8dp"
-        android:layout_marginRight="8dp"
-        android:layout_marginTop="8dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="@+id/eventItemAddress"
-        app:layout_constraintTop_toBottomOf="@+id/eventItemAddress"
-        tools:text="Androidの勉強会です。" />
-
-    <TextView
-        android:id="@+id/eventItemAddress"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="8dp"
-        android:layout_marginLeft="32dp"
-        android:layout_marginRight="8dp"
         android:layout_marginStart="32dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginLeft="32dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/eventItemName"
-        tools:text="ギー岡" />
+        app:layout_constraintTop_toBottomOf="@+id/eventItemName">
+
+        <TableRow
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingEnd="20dp"
+                android:paddingRight="20dp"
+                tools:ignore="RtlSymmetry"
+                android:text="場所" />
+
+            <TextView
+                android:id="@+id/eventItemAddress"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                tools:text="ギー岡" />
+
+        </TableRow>
+        <TableRow
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingEnd="20dp"
+                android:paddingRight="20dp"
+                tools:ignore="RtlSymmetry"
+                android:text="開始日時" />
+
+            <TextView
+                android:id="@+id/eventItemText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                tools:text="Androidの勉強会です。" />
+
+        </TableRow>
+    </TableLayout>
 
 </android.support.constraint.ConstraintLayout>

@@ -51,4 +51,8 @@ public class EventAdapter extends RecyclerView.Adapter {
     public int getItemCount() {
         return mEvents.size();
     }
+
+    public EventModel getEvent(int index) {
+        return mEvents.get(index);
+    }
 }

@@ -116,40 +116,47 @@ public class CreateEventActivity extends AppCompatActivity implements View.OnTou
         event.setEnd_datetime(end_datetime);
         event.setUrl(url);
 
-//        if (progressDialog.isShowing()) {
-//            progressDialog.dismiss();
-//        }
-//        progressDialog.show();
-//
-//        FirebaseFirestore db = FirebaseFirestore.getInstance();
-//        db.collection("events").add(event.getEvent())
-//                .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
-//                    @Override
-//                    public void onSuccess(DocumentReference documentReference) {
-//                        progressDialog.dismiss();
-//                        finish();
-//                    }
-//                })
-//                .addOnFailureListener(new OnFailureListener() {
-//                    @Override
-//                    public void onFailure(@NonNull Exception e) {
-//                        progressDialog.dismiss();
-//                        displayErrorMessage("イベントの作成に失敗しました。");
-//                    }
-//                });
+        /*****************************************************************************/
+        // Cloud Firestore用のコード
+        if (progressDialog.isShowing()) {
+            progressDialog.dismiss();
+        }
+        progressDialog.show();
 
-        final SendPostEventApiTask task = new SendPostEventApiTask(this, (TextView)findViewById(R.id.new_event_error));
-        task.setFinishListener(new SendPostEventApiTask.OnFinishListener() {
-            @Override
-            public void onFinish(boolean isSuccess) {
-                if (isSuccess) {
-                    finish();
-                }
-            }
-        });
-        Map<String, Object>[] events = new Map[1];
-        events[0] = event.getEvent();
-        task.execute(events);
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        db.collection("events").add(event.getEvent())
+                .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                    @Override
+                    public void onSuccess(DocumentReference documentReference) {
+                        progressDialog.dismiss();
+                        finish();
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        progressDialog.dismiss();
+                        displayErrorMessage("イベントの作成に失敗しました。");
+                    }
+                });
+        /*****************************************************************************/
+
+
+        /*****************************************************************************/
+        // CloudFunctions API用のコード
+//        final SendPostEventApiTask task = new SendPostEventApiTask(this, (TextView)findViewById(R.id.new_event_error));
+//        task.setFinishListener(new SendPostEventApiTask.OnFinishListener() {
+//            @Override
+//            public void onFinish(boolean isSuccess) {
+//                if (isSuccess) {
+//                    finish();
+//                }
+//            }
+//        });
+//        Map<String, Object>[] events = new Map[1];
+//        events[0] = event.getEvent();
+//        task.execute(events);
+        /*****************************************************************************/
     }
 
     @SuppressLint("ClickableViewAccessibility")
