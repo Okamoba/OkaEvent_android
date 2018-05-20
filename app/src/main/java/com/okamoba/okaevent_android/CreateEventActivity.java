@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.app.DatePickerDialog;
 import android.app.ProgressDialog;
 import android.app.TimePickerDialog;
+import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
@@ -13,11 +14,14 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.TimePicker;
+import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -37,6 +41,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 import java.util.TimeZone;
@@ -53,12 +58,57 @@ public class CreateEventActivity extends AppCompatActivity implements View.OnTou
     private TimePickerDialog timePickerDialog;
     private ProgressDialog progressDialog;
 
+    private EventModel event;
+    private String uid;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_createevent);
 
         initializeDialogs();
+
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        if (user == null) {
+            Toast.makeText(getApplicationContext(), "認証に失敗しました。", Toast.LENGTH_SHORT).show();
+            finish();
+        } else {
+            uid = user.getUid();
+        }
+
+        Bundle bundle = getIntent().getExtras();
+        if (bundle != null) {
+            byte[] value = getIntent().getExtras().getByteArray("event");
+
+            if (value != null && value.length > 1) {
+                event = new EventModel(value);
+
+                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.JAPAN);
+
+                ((EditText)findViewById(R.id.new_event_name)).setText(event.getName());
+                ((EditText)findViewById(R.id.new_event_text)).setText(event.getText());
+                ((EditText)findViewById(R.id.new_event_address)).setText(event.getAddress());
+                ((EditText)findViewById(R.id.new_event_start_datetime)).setText(sdf.format(event.getStart_datetime()));
+                ((EditText)findViewById(R.id.new_event_end_datetime)).setText(sdf.format(event.getEnd_datetime()));
+                ((EditText)findViewById(R.id.new_event_url)).setText(event.getUrl());
+                ((Button)findViewById(R.id.new_event_button)).setText("編集");
+
+                progressDialog.setTitle("イベント編集");
+                progressDialog.setMessage("編集中");
+
+                if (!event.getAuthor().equals(uid)) {
+                    // 自分の作ったイベントじゃないとき
+                    findViewById(R.id.new_event_name).setEnabled(false);
+                    findViewById(R.id.new_event_text).setEnabled(false);
+                    findViewById(R.id.new_event_address).setEnabled(false);
+                    findViewById(R.id.new_event_start_datetime).setEnabled(false);
+                    findViewById(R.id.new_event_end_datetime).setEnabled(false);
+                    findViewById(R.id.new_event_url).setEnabled(false);
+
+                    ((Button)findViewById(R.id.new_event_button)).setText("戻る");
+                }
+            }
+        }
 
         EditText eT_start_datetime = findViewById(R.id.new_event_start_datetime);
         eT_start_datetime.setTextIsSelectable(true);
@@ -72,6 +122,11 @@ public class CreateEventActivity extends AppCompatActivity implements View.OnTou
 
     @Override
     public void onClick(View view) {
+        if (!event.getAuthor().equals("") && !event.getAuthor().equals(uid)) {
+            finish();
+            return;
+        }
+
         findViewById(R.id.new_event_error).setVisibility(View.GONE);
 
         String name = ((EditText)findViewById(R.id.new_event_name)).getText().toString();
@@ -107,7 +162,6 @@ public class CreateEventActivity extends AppCompatActivity implements View.OnTou
             return;
         }
 
-        final EventModel event = new EventModel();
         event.setAuthor(user.getUid());
         event.setName(name);
         event.setAddress(address);
@@ -124,39 +178,60 @@ public class CreateEventActivity extends AppCompatActivity implements View.OnTou
         progressDialog.show();
 
         FirebaseFirestore db = FirebaseFirestore.getInstance();
-        db.collection("events").add(event.getEvent())
-                .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
-                    @Override
-                    public void onSuccess(DocumentReference documentReference) {
-                        progressDialog.dismiss();
-                        finish();
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        progressDialog.dismiss();
-                        displayErrorMessage("イベントの作成に失敗しました。");
-                    }
-                });
-        /*****************************************************************************/
+        if (!event.getDocument_id().equals("")) {
+            db.collection("events").document(event.getDocument_id()).set(event.getEvent())
+                    .addOnSuccessListener(new OnSuccessListener<Void>() {
+                        @Override
+                        public void onSuccess(Void aVoid) {
+                            progressDialog.dismiss();
+                            finish();
+
+                        }
+                    })
+                    .addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            progressDialog.dismiss();
+                            displayErrorMessage("イベントの編集に失敗しました。");
+                        }
+                    });
+        } else {
+            db.collection("events").add(event.getEvent())
+                    .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                        @Override
+                        public void onSuccess(DocumentReference documentReference) {
+                            progressDialog.dismiss();
+                            finish();
+                        }
+                    })
+                    .addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            progressDialog.dismiss();
+                            displayErrorMessage("イベントの作成に失敗しました。");
+                        }
+                    });
+            /*****************************************************************************/
 
 
-        /*****************************************************************************/
-        // CloudFunctions API用のコード
-//        final SendPostEventApiTask task = new SendPostEventApiTask(this, (TextView)findViewById(R.id.new_event_error));
-//        task.setFinishListener(new SendPostEventApiTask.OnFinishListener() {
-//            @Override
-//            public void onFinish(boolean isSuccess) {
-//                if (isSuccess) {
-//                    finish();
-//                }
-//            }
-//        });
-//        Map<String, Object>[] events = new Map[1];
-//        events[0] = event.getEvent();
-//        task.execute(events);
-        /*****************************************************************************/
+            /*****************************************************************************/
+            // CloudFunctions API用のコード
+            //        final SendPostEventApiTask task = new SendPostEventApiTask(this, (TextView)findViewById(R.id.new_event_error));
+            //        task.setFinishListener(new SendPostEventApiTask.OnFinishListener() {
+            //            @Override
+            //            public void onFinish(boolean isSuccess) {
+            //                if (isSuccess) {
+            //                    finish();
+            //                }
+            //            }
+            //        });
+            //        Map<String, Object>[] events = new Map[1];
+            //        events[0] = event.getEvent();
+            //        task.execute(events);
+            /*****************************************************************************/
+
+        }
+
     }
 
     @SuppressLint("ClickableViewAccessibility")
