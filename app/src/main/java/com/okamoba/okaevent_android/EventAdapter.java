@@ -28,7 +28,7 @@ public class EventAdapter extends RecyclerView.Adapter {
                 if (documentSnapshots == null)
                     return;
                 for (DocumentSnapshot documentSnapshot : documentSnapshots.getDocuments()) {
-                    mEvents.add(EventModel.createFromDocumentSnapshot(documentSnapshot));
+                    mEvents.add(new EventModel(documentSnapshot));
                 }
                 notifyDataSetChanged();
             }

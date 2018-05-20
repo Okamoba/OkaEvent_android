@@ -5,6 +5,9 @@ import android.util.Log;
 
 import com.google.firebase.firestore.DocumentSnapshot;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.StringReader;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -117,18 +120,42 @@ public class EventModel {
         return event_map;
     }
 
-    public static EventModel createFromDocumentSnapshot(DocumentSnapshot documentSnapshot) {
+    EventModel() {
+    }
+
+    EventModel(DocumentSnapshot documentSnapshot) {
         Map<String, Object> map = documentSnapshot.getData();
-        EventModel model = new EventModel();
-        model.name = map.get("name").toString();
-        model.text = map.get("text").toString();
-        model.address = map.get("address").toString();
-        model.start_datetime = new Date(map.get("start_datetime").toString()); // TODO:パース
-        model.end_datetime = new Date(map.get("end_datetime").toString());// TODO:パース
-        model.url = map.get("url").toString();
-        model.author = map.get("author").toString();
-        model.document_id = documentSnapshot.getId();
-        Log.e("EventModel", String.valueOf(model.start_datetime.getYear()));
-        return model;
+
+        name = map.get("name").toString();
+        text = map.get("text").toString();
+        address = map.get("address").toString();
+        start_datetime = new Date(map.get("start_datetime").toString());
+        end_datetime = new Date(map.get("end_datetime").toString());
+        url = map.get("url").toString();
+        author = map.get("author").toString();
+        document_id = documentSnapshot.getId();
+    }
+
+    EventModel(@NonNull byte[] value) {
+        BufferedReader br = new BufferedReader(new StringReader(new String(value)));
+
+        try {
+            name = br.readLine();
+            text = br.readLine();
+            address = br.readLine();
+            start_datetime = new Date(br.readLine());
+            end_datetime = new Date(br.readLine());
+            url = br.readLine();
+            author = br.readLine();
+            document_id = br.readLine();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public byte[] getByte() {
+        String return_text = name + "\n" + text + "\n" + address + "\n" + start_datetime.toString() + "\n" + end_datetime.toString() + "\n" + url + "\n" + author + "\n" + document_id;
+
+        return return_text.getBytes();
     }
 }

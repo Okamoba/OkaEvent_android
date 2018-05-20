@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
@@ -47,11 +48,10 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onItemClick(View view, int position) {
                 EventModel event = mAdapter.getEvent(position);
-                if (event.getAuthor() == mAuth.getUid()) {
-                    // TODO: 2018/04/28 イベントを編集できるようにする 
-                } else {
-                    // TODO: 2018/04/28 イベントの詳細を表示する 
-                }
+
+                Intent event_intent = new Intent(MainActivity.this, CreateEventActivity.class);
+                event_intent.putExtra("event", event.getByte());
+                startActivity(event_intent);
             }
         }));
 

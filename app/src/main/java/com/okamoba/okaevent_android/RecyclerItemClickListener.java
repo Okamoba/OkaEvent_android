@@ -30,7 +30,7 @@ public class RecyclerItemClickListener implements RecyclerView.OnItemTouchListen
             childView.setPressed(true);
             mListener.onItemClick(childView, view.getChildPosition(childView));
         }
-        return true;
+        return false;
     }
 
     @Override
