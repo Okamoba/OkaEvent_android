@@ -5,6 +5,7 @@ import android.app.DatePickerDialog;
 import android.app.ProgressDialog;
 import android.app.TimePickerDialog;
 import android.content.Context;
+import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
@@ -14,6 +15,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.DatePicker;
@@ -77,37 +79,48 @@ public class CreateEventActivity extends AppCompatActivity implements View.OnTou
         }
 
         Bundle bundle = getIntent().getExtras();
-        if (bundle != null) {
-            byte[] value = getIntent().getExtras().getByteArray("event");
+        byte[] value;
+        if (bundle != null && (value = getIntent().getExtras().getByteArray("event")) != null && value.length > 1) {
+            event = new EventModel(value);
 
-            if (value != null && value.length > 1) {
-                event = new EventModel(value);
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.JAPAN);
 
-                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.JAPAN);
+            ((EditText)findViewById(R.id.new_event_name)).setText(event.getName());
+            ((EditText)findViewById(R.id.new_event_text)).setText(event.getText());
+            ((EditText)findViewById(R.id.new_event_address)).setText(event.getAddress());
+            ((EditText)findViewById(R.id.new_event_start_datetime)).setText(sdf.format(event.getStart_datetime()));
+            ((EditText)findViewById(R.id.new_event_end_datetime)).setText(sdf.format(event.getEnd_datetime()));
+            ((EditText)findViewById(R.id.new_event_url)).setText(event.getUrl());
 
-                ((EditText)findViewById(R.id.new_event_name)).setText(event.getName());
-                ((EditText)findViewById(R.id.new_event_text)).setText(event.getText());
-                ((EditText)findViewById(R.id.new_event_address)).setText(event.getAddress());
-                ((EditText)findViewById(R.id.new_event_start_datetime)).setText(sdf.format(event.getStart_datetime()));
-                ((EditText)findViewById(R.id.new_event_end_datetime)).setText(sdf.format(event.getEnd_datetime()));
-                ((EditText)findViewById(R.id.new_event_url)).setText(event.getUrl());
+            if (!event.getAuthor().equals(uid)) {
+                // 自分が作ったイベントじゃないとき
+                findViewById(R.id.new_event_name).setEnabled(false);
+                ((EditText) findViewById(R.id.new_event_name)).setTextColor(Color.BLACK);
+                findViewById(R.id.new_event_text).setEnabled(false);
+                ((EditText) findViewById(R.id.new_event_text)).setTextColor(Color.BLACK);
+                findViewById(R.id.new_event_address).setEnabled(false);
+                ((EditText) findViewById(R.id.new_event_address)).setTextColor(Color.BLACK);
+                findViewById(R.id.new_event_start_datetime).setEnabled(false);
+                ((EditText) findViewById(R.id.new_event_start_datetime)).setTextColor(Color.BLACK);
+                findViewById(R.id.new_event_end_datetime).setEnabled(false);
+                ((EditText) findViewById(R.id.new_event_end_datetime)).setTextColor(Color.BLACK);
+                findViewById(R.id.new_event_url).setEnabled(false);
+                ((EditText) findViewById(R.id.new_event_url)).setTextColor(Color.BLACK);
+
+                ((Button)findViewById(R.id.new_event_button)).setText("戻る");
+
+                getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+            } else {
+                // 自分が作ったイベントのとき
                 ((Button)findViewById(R.id.new_event_button)).setText("編集");
 
                 progressDialog.setTitle("イベント編集");
                 progressDialog.setMessage("編集中");
 
-                if (!event.getAuthor().equals(uid)) {
-                    // 自分の作ったイベントじゃないとき
-                    findViewById(R.id.new_event_name).setEnabled(false);
-                    findViewById(R.id.new_event_text).setEnabled(false);
-                    findViewById(R.id.new_event_address).setEnabled(false);
-                    findViewById(R.id.new_event_start_datetime).setEnabled(false);
-                    findViewById(R.id.new_event_end_datetime).setEnabled(false);
-                    findViewById(R.id.new_event_url).setEnabled(false);
-
-                    ((Button)findViewById(R.id.new_event_button)).setText("戻る");
-                }
+                getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
             }
+        } else {
+            event = new EventModel();
         }
 
         EditText eT_start_datetime = findViewById(R.id.new_event_start_datetime);
@@ -122,6 +135,7 @@ public class CreateEventActivity extends AppCompatActivity implements View.OnTou
 
     @Override
     public void onClick(View view) {
+        Log.e("CHECK", "author : " + event.getDocument_id());
         if (!event.getAuthor().equals("") && !event.getAuthor().equals(uid)) {
             finish();
             return;
